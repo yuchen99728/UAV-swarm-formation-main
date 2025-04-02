@@ -5,6 +5,8 @@ using namespace std;
 #define M_PI 3.14159265358979323846
 #define simu_flag  1
 float dis_val = 0.0;
+//在这里我做一些修改，用来测试GitHub
+
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>主函数<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 int main(int argc, char **argv)
 {
