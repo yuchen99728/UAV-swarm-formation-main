@@ -1,0 +1,4 @@
+# Hashes of file build rules.
+d89fb779dfce26740f1fc0de76e2e04f /home/amov/command_pub/devel/share/roseus/ros/command/manifest.l
+85791fc48a56cf5f0ae2f582a9845f7a CMakeFiles/clean_test_results
+1ecdced8e178acfd7cd9f234b0cf124a command/CMakeFiles/command_generate_messages_eus

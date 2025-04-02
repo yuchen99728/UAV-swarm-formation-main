@@ -1,0 +1,2 @@
+command:msg
+-DCATKIN_DEVEL_PREFIX=/home/amov/command_pub/devel -DCMAKE_INSTALL_PREFIX=/home/amov/command_pub/install -G Unix Makefiles

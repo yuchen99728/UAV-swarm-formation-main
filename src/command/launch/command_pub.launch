@@ -1,0 +1,26 @@
+<launch>
+    <arg name="uav_id" default="1"/>
+    <arg name="swarm_num" default="3"/>
+    	<!-- 无人机初始位置 -->
+	<arg name="uav_init_x" default="0.0"/>
+    <arg name="uav_init_y" default="0.0"/>
+    <arg name="neighbour_id1" default="2"/>
+    <arg name="neighbour_id2" default="3"/>
+    <node pkg="command" name="uav$(arg uav_id)_command_pub" type="command_pub" output="screen">
+        <param name="uav_id" value="$(arg uav_id)"/>
+        <!-- publish topic -->
+        <remap from="/cmd"          to="/planning/pos_cmd"/>
+        <!-- <remap from="px4ctrl"      to="/mavros/setpoint_raw/attitude"/>     -->
+        <!-- subscribe topic -->
+        <remap from="local_pc"     to="/pcl_render_node/cloud"/>
+        <remap from="/uav1/drone_state"  to="/lidar_slam/odom"/>
+        <remap from="imu"          to="/lidar_slam/imu"/>
+        <remap from="goal"         to="/goal"/>
+        <!-- <remap from="rc_in"        to="/mavros/rc/in"/> -->
+        <rosparam command="load" file="$(find command)/config/param_command.yaml" />
+
+
+    </node>
+    <node pkg="command" name="uav$(arg uav_id)_trans" type="test_p" output="screen">
+    </node>
+</launch>

@@ -1,0 +1,58 @@
+<launch>
+
+	<!-- <param name = "dis_val" value="3.0" /> -->
+
+    <node pkg="nlink_parser" type="linktrack" name="linktrack0" output="screen">
+		<param name="port_name" value="/dev/ttyCH343USB0" />
+		<param name="baud_rate" value="921600" />
+	</node>
+
+	<node pkg="nlink_example" type="sub_dis" name="sub_dis" output="screen">
+	</node>
+
+    <arg name="uav_id" default="1"/>
+    <arg name="swarm_num" default="3"/>
+    	<!-- 无人机初始位置 -->
+	<arg name="uav_init_x" default="0.0"/>
+    <arg name="uav_init_y" default="0.0"/>
+    <arg name="neighbour_id1" default="2"/>
+    <arg name="neighbour_id2" default="3"/>
+	<!-- 1.optitrack 2.t265 3.rtk-->
+	<arg name="input_source" default="3"/>
+    <group ns="/uav$(arg uav_id)">
+    <node pkg="mavros" type="mavros_node" name="mavros" output="screen">
+        <param name="fcu_url" value="/dev/ttyTHS1:921600" />
+        <!--param name="gcs_url" value="udp://@192.168.31.46" / -->
+        <param name="gcs_url" value="udp://@192.168.31.96" />
+        <param name="target_system_id" value="1" />
+        <param name="target_component_id" value="1" />
+        <rosparam command="load" file="$(find p450_experiment)/config/mavros_config/px4_pluginlists.yaml" />
+        <rosparam command="load" file="$(find p450_experiment)/config/mavros_config/px4_config.yaml" />
+    </node>
+     <!-- <include file="$(find p450_experiment)/launch_basic/rs_t265.launch">
+    </include>  -->
+    </group>
+    <node pkg="command" name="uav$(arg uav_id)_vision2px4" type="vision_estimator" output="screen">
+        <param name="uav_id" value="$(arg uav_id)"/>
+        <param name="input_source" value="$(arg input_source)"/>
+        <param name="uav_init_x" value="$(arg uav_init_x)" type="double"/>
+        <param name="uav_init_y" value="$(arg uav_init_y)" type="double"/>
+    </node>
+    <node pkg="command" name="uav$(arg uav_id)_command_pub" type="command_pub_dis" output="screen">
+        <param name="uav_id" value="$(arg uav_id)"/>
+        <!-- 控制器标志位: 0代表PX4的位置环控制算法，1代表速度（使用一阶分布式控制算法） -->
+		<param name="controller_flag" value="0"/>
+         <param name="neighbour_id1" value="$(arg neighbour_id1)"/>
+        <param name="neighbour_id2" value="$(arg neighbour_id2)"/>
+        <param name="k_p" value="0.9"/>
+        <param name="k_aij" value="0.1"/>
+        <param name="k_gamma" value="0.1"/>
+        <param name="k_avoid" value="10"/>
+        <param name="pobs_x" value="1.5"/>
+        <param name="pobs_y" value="0.0"/>
+    </node>
+    <node pkg="command" name="uav$(arg uav_id)_trans" type="test_p" output="screen">
+    </node>
+
+
+</launch>

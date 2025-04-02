@@ -1,0 +1,8 @@
+prefix=/home/amov/command_pub/install
+
+Name: command
+Description: Description of command
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime

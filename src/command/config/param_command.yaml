@@ -1,0 +1,14 @@
+swarm_num:       3
+#-- 控制器标志位: 0代表PX4的位置环控制算法，1代表速度（使用一阶分布式控制算法） 
+controller_flag: 1 
+
+neighbour_id1:   2
+neighbour_id2:   3
+
+k_p:             0.8
+k_aij:           0.1
+k_gamma:         0.1
+
+k_avoid:         0.5
+pobs_x:          0.0
+pobs_y:          0.0

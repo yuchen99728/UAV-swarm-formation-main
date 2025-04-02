@@ -1,0 +1,55 @@
+<launch>
+    <arg name="uav_id" default="1"/>
+    <arg name="swarm_num" default="3"/>
+    	<!-- 无人机初始位置 -->
+	<arg name="uav_init_x" default="0.0"/>
+    <arg name="uav_init_y" default="0.0"/>
+    <arg name="neighbour_id1" default="2"/>
+    <arg name="neighbour_id2" default="3"/>
+    <node pkg="command" name="uav$(arg uav_id)_command_pub" type="command_pub" output="screen">
+        <param name="uav_id" value="$(arg uav_id)"/>
+        <!-- 控制器标志位: 0代表PX4的位置环控制算法，1代表速度（使用一阶分布式控制算法） -->
+		<param name="controller_flag" value="1"/>
+        <param name="neighbour_id1" value="$(arg neighbour_id1)"/>
+        <param name="neighbour_id2" value="$(arg neighbour_id2)"/>
+        <param name="k_p" value="0.8"/>
+        <param name="k_aij" value="0.1"/>
+        <param name="k_gamma" value="0.1"/>
+        <param name="k_avoid" value="0.5"/>
+        <param name="pobs_x" value="1.0"/>
+        <param name="pobs_y" value="0.0"/>
+
+        <!-- publish topic -->
+        <remap from="/cmd"          to="/planning/pos_cmd"/>
+        <!-- <remap from="px4ctrl"      to="/mavros/setpoint_raw/attitude"/>     -->
+        <!-- subscribe topic -->
+        <remap from="local_pc"     to="/pcl_render_node/cloud"/>
+        <remap from="/uav1/drone_state"  to="/lidar_slam/odom"/>
+        <remap from="imu"          to="/lidar_slam/imu"/>
+        <remap from="goal"         to="/goal"/>
+        <remap from="rc_in"        to="/mavros/rc/in"/>
+
+    </node>
+     <node pkg="command" name="uav$(arg uav_id)_command_pub" type="command_pub_follower" output="screen">
+        <param name="uav_id" value="2"/>
+        <!-- 控制器标志位: 0代表PX4的位置环控制算法，1代表速度（使用一阶分布式控制算法）2代表位置队形重构-->
+		<param name="controller_flag" value="1"/>
+         <param name="neighbour_id1" value="1"/>
+        <param name="neighbour_id2" value="3"/>
+        <param name="k_p" value="0.95"/>
+        <param name="k_aij" value="0.1"/>
+        <param name="k_gamma" value="0.1"/>
+    </node>
+     <node pkg="command" name="uav$(arg uav_id)_command_pub" type="command_pub_follower" output="screen">
+        <param name="uav_id" value="3"/>
+        <!-- 控制器标志位: 0代表PX4的位置环控制算法，1代表速度（使用一阶分布式控制算法）2代表位置队形重构-->
+		<param name="controller_flag" value="1"/>
+         <param name="neighbour_id1" value="1"/>
+        <param name="neighbour_id2" value="2"/>
+        <param name="k_p" value="0.95"/>
+        <param name="k_aij" value="0.1"/>
+        <param name="k_gamma" value="0.1"/>
+    </node>
+    <node pkg="command" name="uav$(arg uav_id)_trans" type="test_p" output="screen">
+    </node>
+</launch>
